@@ -1,0 +1,29 @@
+# general  modules
+django >3.2,<3.3
+djangorestframework
+
+# env controlls
+python-decouple
+
+# third party modules
+markdown       
+django-filter  
+drf-yasg[validation]
+django-cors-headers
+django-robots
+django-debug-toolbar
+
+# deployment module
+gunicorn
+whitenoise
+
+# refactoring and tests
+black
+flake8
+pytest-django
+
+
+# database client
+psycopg2-binary
+
+
