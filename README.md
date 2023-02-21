@@ -18,7 +18,10 @@
   - [Docker Installation](#docker-installation)
   - [KubeCTL Installation](#kubectl-installation)
   - [Minikube Installation](#minikube-installation)
+  - [Helm Installation](#helm-installation)
   - [Test Kubectl connection to cluster](#test-kubectl-connection-to-cluster)
+- [CheatSheets](#cheatsheets)
+  - [deploy with helm](#deploy-with-helm)
 
 # Goal
 This template id dedicated to up and running django with kubernetes.
@@ -93,6 +96,19 @@ when its done you will see the details of the steps and informations.
 <div align="center" ><img loading="lazy" style="width:700px" src="./docs/minikube-installation-done.png"></div>
 
 
+## Helm Installation
+Helm is a package manager for Kubernetes. It is the apt, yum, or homebrew equivalent for Kubernetes. The fundamental unit of Helm is a Helm chart. A set of Helm charts together form a packaged application that can be deployed as one unit. Helm serves two main functions:
+
+- Package Manager: Helm works as a package manager with in-built version and dependencies management.
+- Templating Engine: By creating application templates using Helm charts, DevOps personnel can deploy the same application across different Kubernetes clusters such as development, staging, and production with the same set of Kubernetes YAML files.
+
+general installation:
+<https://helm.sh/docs/intro/install/>
+
+github link for installation installation:
+<https://github.com/helm/helm/releases>
+
+
 
 ## Test Kubectl connection to cluster
 
@@ -103,4 +119,30 @@ kubectl cluster-info
 and you should see something similar to this:
 <div align="center" ><img loading="lazy" style="width:700px" src="./docs/kubectl-installation-done.png"></div>
 
+# CheatSheets
+kubernetes cheat sheets.
 
+<div align="center" ><img loading="lazy"  src="./docs/kubernetes-cheatsheet.jpg"></div>
+
+
+## deploy with helm
+```shell
+helm create <APP_NAME>
+```
+
+```shell
+helm upgrade --install <APP_NAME> ./helm/<APP_NAME>/
+```
+
+```shell
+kubectl get pod
+```
+
+
+```shell
+kubectl port-forward <POD_NAME> 8080:80
+```
+
+
+registry.hamdocker.ir
+fiNg3eX4mWiWanLb

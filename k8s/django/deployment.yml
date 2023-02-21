@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django
+  labels:
+    app: django
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: django
+  template:
+    metadata:
+      labels:
+        name: django
+    spec:
+      containers:
+        - name: django
+          image: django_app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DEBUG
+              value: "True"
+          resources:
+            limits:
+              memory: 1000Mi
+              cpu: "1"
+            requests:
+              memory: 1000Mi
+              cpu: "1"
+
+          volumeMounts:
+            - name: media-volume-mount
+              mountPath: /usr/src/app/media
+      volumes:
+        - name: media-volume-mount
+          persistentVolumeClaim:
+            claimName: media-pvc
+
