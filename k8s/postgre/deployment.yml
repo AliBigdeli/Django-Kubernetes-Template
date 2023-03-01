@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: default
+  labels:
+    app: postgres
 spec:
   replicas: 1
   selector:
@@ -11,11 +14,11 @@ spec:
     metadata:
       labels:
         app: postgres
-        tier: backend
     spec:
       containers:
         - name: postgres
           image: postgres:alpine
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
           volumeMounts:
@@ -31,6 +34,8 @@ spec:
               limits:
                 cpu: 200m
                 memory: 300Mi
+      restartPolicy: Always
+
 
       volumes:
         - name: postgres-volume-mount
@@ -84,9 +89,9 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-svc
+  name: postgres
   labels:
-    app: postgres-svc
+    app: postgres
 spec:
   type: LoadBalancer
   selector:
