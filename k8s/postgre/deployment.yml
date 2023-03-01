@@ -58,6 +58,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim #claim a portion of persistent volume
 metadata:
   name: postgres-pvc
+  labels:
+    app: postgres-pvc
 spec:
   storageClassName: manual
   accessModes:
@@ -72,8 +74,23 @@ kind: ConfigMap
 metadata:
   name: postgres-config
   labels:
-    app: postgres
+    app: postgres-config
 data:
   POSTGRES_DB: postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-svc
+  labels:
+    app: postgres-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: postgres
+  ports:
+    - port: 5432 
+      targetPort: 5432 

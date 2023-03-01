@@ -146,3 +146,6 @@ kubectl port-forward <POD_NAME> 8080:80
 
 registry.hamdocker.ir
 fiNg3eX4mWiWanLb
+
+
+docker build -t django_app -f ./dockerfiles/dev/django/Dockerfile .

@@ -13,16 +13,19 @@ spec:
     metadata:
       labels:
         name: django
+        tier: backend
     spec:
       containers:
         - name: django
           image: django_app:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["-c", "python manage.py runserver 0.0.0.0:8000"]
           ports:
             - containerPort: 8000
-          env:
-            - name: DEBUG
-              value: "True"
+          envFrom:
+            - configMapRef:
+                name: django-config
           resources:
             limits:
               memory: 512Mi
@@ -34,8 +37,68 @@ spec:
           volumeMounts:
             - name: media-volume-mount
               mountPath: /usr/src/app/media
+
       volumes:
         - name: media-volume-mount
           persistentVolumeClaim:
             claimName: media-pvc
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-config
+  labels:
+    app: django-config
+data:
+  DEBUG: "True"
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /core/media
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-pvc
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  volumeName: media-pv
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-svc
+  labels:
+    app: django-svc
+spec:
+  type: LoadBalancer
+  selector:
+    name: django
+  ports:
+    - port: 8000 
+      targetPort: 8000 
