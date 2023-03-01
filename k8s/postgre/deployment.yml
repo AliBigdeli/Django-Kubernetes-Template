@@ -6,30 +6,32 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres-container
+      app: postgres
   template:
     metadata:
       labels:
-        app: postgres-container
+        app: postgres
         tier: backend
     spec:
       containers:
-        - name: postgres-container
+        - name: postgres
           image: postgres:alpine
-          env:
-            - name: POSTGRES_DB
-              value: postgres
-            - name: POSTGRES_USER
-              value: postgres
-            - name: POSTGRES_PASSWORD
-              value: postgres
-            - name: DB_VENDOR
-              value: postgres
           ports:
             - containerPort: 5432
           volumeMounts:
             - name: postgres-volume-mount
               mountPath: /var/lib/postgresql/data
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          resources:
+              requests:
+                cpu: 200m
+                memory: 300Mi
+              limits:
+                cpu: 200m
+                memory: 300Mi
+
       volumes:
         - name: postgres-volume-mount
           persistentVolumeClaim:
@@ -45,7 +47,7 @@ metadata:
 spec:
   storageClassName: manual
   capacity:
-    storage: 100M # total capacity for this persistent volume
+    storage: 200M # total capacity for this persistent volume
   accessModes:
     - ReadWriteOnce
   hostPath: # where pesistent volume is created on the kubernetes node (needs to be /data for minikube)
@@ -55,9 +57,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim #claim a portion of persistent volume
 metadata:
-  labels:
-    app: postgres
-  name: postgres-pv-claim
+  name: postgres-pvc
 spec:
   storageClassName: manual
   accessModes:
@@ -66,3 +66,14 @@ spec:
     requests:
       storage: 100M # storage capacity cons
 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres

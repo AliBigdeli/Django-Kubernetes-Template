@@ -31,4 +31,4 @@ spec:
         - containerPort: 80
           name: my-nginx
       restartPolicy: Always
----
+
