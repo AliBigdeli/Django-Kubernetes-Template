@@ -148,4 +148,5 @@ registry.hamdocker.ir
 fiNg3eX4mWiWanLb
 
 
-docker build -t django_app -f ./dockerfiles/dev/django/Dockerfile .
+docker build -t django_app -f ./dockerfiles/prod/django/Dockerfile .
+docker build -t nginx_app -f ./dockerfiles/prod/nginx/Dockerfile .

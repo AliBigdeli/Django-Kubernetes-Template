@@ -261,3 +261,7 @@ if SHOW_DEBUGGER_TOOLBAR:
         "10.0.2.2",
     ]
 
+# production whitenoise
+if config("ENABLE_WHITENOISE", cast=bool, default=False):
+    # Insert Whitenoise Middleware.
+    MIDDLEWARE +=['whitenoise.middleware.WhiteNoiseMiddleware',]

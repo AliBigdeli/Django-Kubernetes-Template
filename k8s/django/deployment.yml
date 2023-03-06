@@ -20,7 +20,7 @@ spec:
           image: django_app:latest
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh"]
-          args: ["-c", "python manage.py runserver 0.0.0.0:8000"]
+          args: ["-c", "python3 manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 core.wsgi:application"]
           ports:
             - containerPort: 8000
           envFrom:
@@ -42,16 +42,7 @@ spec:
         - name: media-volume-mount
           persistentVolumeClaim:
             claimName: media-pvc
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: django-config
-  labels:
-    app: django-config
-data:
-  DEBUG: "True"
+  
 ---
 
 apiVersion: v1
@@ -85,20 +76,3 @@ spec:
     requests:
       storage: 2Gi
   volumeName: media-pv
-
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: django-svc
-  labels:
-    app: django-svc
-spec:
-  type: LoadBalancer
-  selector:
-    name: django
-  ports:
-    - port: 8000 
-      targetPort: 8000 

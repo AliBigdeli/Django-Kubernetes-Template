@@ -73,29 +73,6 @@ spec:
     requests:
       storage: 100M # storage capacity cons
 
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-config
-  labels:
-    app: postgres-config
-data:
-  POSTGRES_DB: postgres
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  type: LoadBalancer
-  selector:
-    app: postgres
-  ports:
-    - port: 5432 
-      targetPort: 5432 
+
+
