@@ -14,11 +14,16 @@ services:
     restart: always
 
   backend:
-    image: django_app:latest
+    build:
+      context: .
+      dockerfile: dockerfiles/dev/django/Dockerfile
     container_name: backend
+    command: sh -c "python manage.py check_database && \ 
+                    yes | python manage.py makemigrations  && \
+                    yes | python manage.py migrate  && \
+                    python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./core:/usr/src/app
-    command: sh -c "python manage.py runserver"
     ports:
       - 8000:8000
     env_file:
@@ -27,3 +32,21 @@ services:
     depends_on:
       - db
 
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      # Change the number before : to the port the web interface should be accessible on
+      - '5000:80'
+      # Change the number before : to the port the SMTP server should be accessible on
+      - '25:25'
+      # Change the number before : to the port the IMAP server should be accessible on
+      - '143:143'
+    volumes:
+      # This is where smtp4dev stores the database..
+      - smtp4dev-data:/smtp4dev
+    environment:
+      - ServerOptions__HostName=smtp4dev
+
+volumes:
+  smtp4dev-data:
