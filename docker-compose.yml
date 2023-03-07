@@ -73,7 +73,7 @@ services:
     build: 
       context: .
       dockerfile: dockerfiles/dev/django/Dockerfile
-    command: celery -A core flower --loglevel=DEBUG --port=9090
+    command: celery -A core flower --loglevel=DEBUG --port=9090 --basic_auth=admin:admin
     container_name: celery_flower
     volumes:
       - ./core:/usr/src/app
