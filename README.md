@@ -20,7 +20,6 @@
     - [Docker Desktop (default)](#docker-desktop-default)
     - [Minikube Installation (Optional)](#minikube-installation-optional)
   - [KubeCTL Installation](#kubectl-installation)
-  - [Helm Installation (Optional)](#helm-installation-optional)
   - [Test Kubectl connection to cluster](#test-kubectl-connection-to-cluster)
 - [CheatSheets](#cheatsheets)
   - [Switch Cluster](#switch-cluster)
@@ -30,7 +29,6 @@
     - [deploy postgres](#deploy-postgres)
     - [deploy django](#deploy-django)
     - [deploy nginx](#deploy-nginx)
-  - [Deploy with helm (Optional)](#deploy-with-helm-optional)
 
 # Goal
 This template id dedicated to up and running django with kubernetes.
@@ -111,19 +109,6 @@ for installing kubectl, you can head to the link down below and choose the right
 <https://kubernetes.io/docs/tasks/tools/>
 
 **Note:** for windows users after downloading the file you have to put it in a folder inside C directory and then just add the path to environment variables of the system. then you can access and test it with the following command: ```shell  kubectl version --client```
-
-## Helm Installation (Optional)
-Helm is a package manager for Kubernetes. It is the apt, yum, or homebrew equivalent for Kubernetes. The fundamental unit of Helm is a Helm chart. A set of Helm charts together form a packaged application that can be deployed as one unit. Helm serves two main functions:
-
-- Package Manager: Helm works as a package manager with in-built version and dependencies management.
-- Templating Engine: By creating application templates using Helm charts, DevOps personnel can deploy the same application across different Kubernetes clusters such as development, staging, and production with the same set of Kubernetes YAML files.
-
-general installation:
-<https://helm.sh/docs/intro/install/>
-
-github link for installation installation:
-<https://github.com/helm/helm/releases>
-
 
 
 ## Test Kubectl connection to cluster
@@ -295,27 +280,5 @@ replicaset.apps/postgres-6bdb7d69c   1         1         1       12m
 at the end you need to be able to see the website by opening your localhost on port 80
 
 
-
-## Deploy with helm (Optional)
-```shell
-helm create <APP_NAME>
-```
-
-```shell
-helm upgrade --install <APP_NAME> ./helm/<APP_NAME>/
-```
-
-```shell
-kubectl get pod
-```
-
-
-```shell
-kubectl port-forward <POD_NAME> 8080:80
-```
-
-
-registry.hamdocker.ir
-fiNg3eX4mWiWanLb
 
 
