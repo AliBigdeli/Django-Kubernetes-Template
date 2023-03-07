@@ -12,6 +12,15 @@ services:
       - ./envs/dev/postgre/.env
     restart: always
 
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+        - 5432 
+    command: redis-server --save 60 1 --loglevel warning
+
+
   backend:
     build:
       context: .
@@ -30,6 +39,36 @@ services:
     restart: always
     depends_on:
       - postgres
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: dockerfiles/dev/django/Dockerfile
+    container_name: celery_worker
+    command: celery -A core worker --loglevel=info
+    volumes:
+    - ./core:/usr/src/app- ./core:/app
+    depends_on:
+      - redis
+      - backend
+
+  celery_beat:
+    build: 
+      context: .
+      dockerfile: dockerfiles/dev/django/Dockerfile
+    command: celery -A core beat -l info
+    container_name: celery_beat
+    volumes:
+      - ./core:/usr/src/app
+    env_file:
+      - envs/dev/django/.env
+    environment:
+        - FILE_DEBUGGER=False
+    depends_on:
+      - redis
+      - backend
+      - celery_worker
+
 
   smtp4dev:
     image: rnwood/smtp4dev:v3

@@ -22,6 +22,14 @@ black
 flake8
 pytest-django
 
+# background proccess and cache
+celery[redis]
+redis
+django-redis
+
+# task monitoring
+flower==1.2.0
+kombu==4.1.0
 
 # database client
 psycopg2-binary
