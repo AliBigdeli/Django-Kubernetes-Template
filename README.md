@@ -128,7 +128,7 @@ kubernetes cheat sheets.
 
 ## Switch Cluster
 if you have already setup more than one cluster you can switch between them by docker icon in system tray and changed the kubernetes cluster from one to another.
-
+<div align="center" ><img loading="lazy"  src="./docs/docker-desktop-cluster.png"></div>
 
 # Deployment
 ## Build docker image
