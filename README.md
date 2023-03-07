@@ -242,6 +242,14 @@ replicaset.apps/postgres-6bdb7d69c   1         1         1       5m35s
 ```
 you can change the default configs and update each one.
 
+migrate database configs.
+```shell
+kubectl exec POD_NAME -- python manage.py migrate
+```
+
+**Note:** you need to have migrations included in your project and just do the migrate.
+
+
 ### deploy nginx
 first you need to deploy the pod by the deployment, nginx will be running with 2 replicas:
 ```shell
