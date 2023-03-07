@@ -14,6 +14,7 @@
 # Guideline
 - [Guideline](#guideline)
 - [Goal](#goal)
+- [Diagram](#diagram)
 - [Setup Development Environment](#setup-development-environment)
   - [Docker Installation](#docker-installation)
   - [Kubernetes Cluster Setup](#kubernetes-cluster-setup)
@@ -32,6 +33,10 @@
 
 # Goal
 This template id dedicated to up and running django with kubernetes.
+
+# Diagram 
+this is a simple diagram to show you how the services are integrating with each other.
+<div align="center" ><img loading="lazy" style="width:700px" src="./docs/diagram.png"></div>
 
 # Setup Development Environment
 in order to work with your django application with k8s you need to prepare your environment for development, such as installing docker and minikube for start. so follow along the instructions and make everything.
