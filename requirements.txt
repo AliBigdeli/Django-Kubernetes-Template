@@ -28,8 +28,8 @@ redis
 django-redis
 
 # task monitoring
-flower==1.2.0
-kombu==4.1.0
+flower
+kombu
 
 # database client
 psycopg2-binary

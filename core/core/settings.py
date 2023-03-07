@@ -265,3 +265,27 @@ if SHOW_DEBUGGER_TOOLBAR:
 if config("ENABLE_WHITENOISE", cast=bool, default=False):
     # Insert Whitenoise Middleware.
     MIDDLEWARE +=['whitenoise.middleware.WhiteNoiseMiddleware',]
+
+
+# celery configs
+REDIS_HOST = config("REDIS_HOST", default= "redis")
+REDIS_PORT = config("REDIS_PORT", default= "6379")
+CELERY_REDIS_DATABASE = config("CELERY_REDIS_DATABASE", default= "1")
+REDIS_PASSWORD = config("REDIS_PASSWORD", default= "")
+CELERY_BROKER_URL = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{CELERY_REDIS_DATABASE}'
+CELERY_TIMEZONE = config("TIME_ZONE", default= "UTC")
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# caching configs
+CACHE_REDIS_DATABASE = config("CACHE_REDIS_DATABASE", default= "2")
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{CACHE_REDIS_DATABASE}',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
+
