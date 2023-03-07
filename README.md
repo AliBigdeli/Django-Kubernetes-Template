@@ -22,8 +22,8 @@
     - [Minikube Installation (Optional)](#minikube-installation-optional)
   - [KubeCTL Installation](#kubectl-installation)
   - [Test Kubectl connection to cluster](#test-kubectl-connection-to-cluster)
-- [CheatSheets](#cheatsheets)
   - [Switch Cluster](#switch-cluster)
+- [CheatSheets](#cheatsheets)
 - [Deployment](#deployment)
   - [Build docker image](#build-docker-image)
   - [Deploy with Kubectl](#deploy-with-kubectl)
@@ -125,16 +125,16 @@ kubectl cluster-info
 and you should see something similar to this:
 <div align="center" ><img loading="lazy" style="width:700px" src="./docs/kubectl-installation-done.png"></div>
 
-# CheatSheets
-kubernetes cheat sheets.
-
-<div align="center" ><img loading="lazy"  src="./docs/kubernetes-cheatsheet.jpg"></div>
-
 
 ## Switch Cluster
 if you have already setup more than one cluster you can switch between them by docker icon in system tray and changed the kubernetes cluster from one to another.
 <div align="center" ><img loading="lazy"  src="./docs/docker-desktop-cluster.png"></div>
 
+
+# CheatSheets
+kubernetes cheat sheets.
+
+<div align="center" ><img loading="lazy"  src="./docs/kubernetes-cheatsheet.jpg"></div>
 # Deployment
 ## Build docker image
 for deployment purposes you need to build the docker image, so it can be used inside the k8s deployment as a refrence.
