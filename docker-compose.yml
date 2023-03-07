@@ -69,12 +69,12 @@ services:
       - backend
       - celery_worker
 
-  flower:
+  celery_flower:
     build: 
       context: .
       dockerfile: dockerfiles/dev/django/Dockerfile
     command: celery -A core flower --loglevel=DEBUG --port=9090
-    container_name: flower
+    container_name: celery_flower
     volumes:
       - ./core:/usr/src/app
     env_file:
