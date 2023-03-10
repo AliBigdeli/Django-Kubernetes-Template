@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flower
+  labels:
+    deployment: flower
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: celery-flower
+  template:
+    metadata:
+      labels:
+        pod: celery-flower
+    spec:
+      containers:
+        - name: flower
+          image: django_app:latest
+          command: ["/bin/sh"]
+          args: ["-c",celery -A core flower --loglevel=DEBUG --port=9090 --basic_auth=admin:admin]
+          ports:
+            - containerPort: 5555
+          env:
+            - name: REDIS_HOST
+              value: redis-service
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "250m"
+            requests:
+              memory: 512Mi
+              cpu: "250m"
