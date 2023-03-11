@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-flower
+  labels:
+    app: celery-flower
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: celery-flower
+  template:
+    metadata:
+      labels:
+        name: celery-flower
+        tier: backend
+    spec:
+      containers:
+        - name: celery-flower
+          env:
+            - name: FLOWER_PORT
+              value:  "9090"
+          image: django_app:latest
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["-c","celery -A core flower --loglevel=DEBUG --basic_auth=admin:admin --address=0.0.0.0  --port=9090"]
+          ports:
+            - containerPort: 9090
+          envFrom:
+            - configMapRef:
+                name: django-config
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "250m"
+            requests:
+              memory: 512Mi
+              cpu: "250m"
+          
