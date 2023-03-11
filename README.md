@@ -140,6 +140,7 @@ if you have already setup more than one cluster you can switch between them by d
 kubernetes cheat sheets.
 
 <div align="center" ><img loading="lazy"  src="./docs/kubernetes-cheatsheet.jpg"></div>
+
 # Deployment
 
 ## Build docker image
