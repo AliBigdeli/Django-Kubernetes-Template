@@ -268,21 +268,17 @@ if config("ENABLE_WHITENOISE", cast=bool, default=False):
 
 
 # celery configs
-REDIS_HOST = config("REDIS_HOST", default= "redis")
-REDIS_PORT = config("REDIS_PORT", default= "6379")
-CELERY_REDIS_DATABASE = config("CELERY_REDIS_DATABASE", default= "1")
-REDIS_PASSWORD = config("REDIS_PASSWORD", default= "")
-CELERY_BROKER_URL = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{CELERY_REDIS_DATABASE}'
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default= "redis://redis:6379/1")
 CELERY_TIMEZONE = config("TIME_ZONE", default= "UTC")
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # caching configs
-CACHE_REDIS_DATABASE = config("CACHE_REDIS_DATABASE", default= "2")
+CACHE_BROKER_URL = config("CACHE_BROKER_URL", default= "redis://redis:6379/2")
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/{CACHE_REDIS_DATABASE}',
+        "LOCATION": CACHE_BROKER_URL,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },

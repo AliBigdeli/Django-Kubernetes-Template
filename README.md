@@ -28,8 +28,11 @@
   - [Build docker image](#build-docker-image)
   - [Deploy with Kubectl](#deploy-with-kubectl)
     - [deploy postgres](#deploy-postgres)
+    - [deploy redis](#deploy-redis)
     - [deploy django](#deploy-django)
     - [deploy nginx](#deploy-nginx)
+    - [deploy worker](#deploy-worker)
+    - [deploy beater](#deploy-beater)
 
 # Goal
 This template id dedicated to up and running django with kubernetes.
@@ -169,11 +172,18 @@ docker push [USERNAME]/[IMAGE-NAME]:[TAG]
 ## Deploy with Kubectl
 in order to deploy the sample project i have provided 3 services inside the ```k8s``` directory:
 
-- django
 - postgres
+- redis
+- django
 - nginx
+- celery-worker
+- celery-beater
+- flower
 
 in order to deploy the application using the local cluster you need to apply or create them by kubectl, which will communicate with the cluster and create the needed pods,services,deployments and etc. so just follow the instructions:
+
+
+
 
 ### deploy postgres
 for setting up postgres first of all you need to setup the config-map first so:
@@ -192,21 +202,20 @@ kubectl apply -f ./k8s/postgres/service.yml
 ```
 at the end you will end up having the postgres up and running.
 if you list all the details you can see that the database is running at this point.
+
+
+### deploy redis
+first you need to deploy the pod by the deployment:
 ```shell
-C:\Users\AliBigdeli\Documents\GitHub\Django-Kubernetes-Template>kubectl get all
-NAME                           READY   STATUS    RESTARTS   AGE
-pod/postgres-6bdb7d69c-sdp4j   1/1     Running   0          28s
-
-NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
-service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP    18h
-service/postgres     ClusterIP   10.108.239.104   <none>        5432/TCP   19s
-
-NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/postgres   1/1     1            1           28s
-
-NAME                                 DESIRED   CURRENT   READY   AGE
-replicaset.apps/postgres-6bdb7d69c   1         1         1       28s
+kubectl apply -f ./k8s/redis/deployment.yml
 ```
+
+and lastly i norder for your services to access the database you need to assign a service to it by:
+```shell
+kubectl apply -f ./k8s/redis/service.yml
+```
+
+
 
 ### deploy django
 our main service is our django application which will be communicating with the database. os first of all lets setup config-map
@@ -225,26 +234,6 @@ kubectl apply -f ./k8s/django/service.yml
 ```
 at the end you will end up having the django app up and running.
 if you list all the details you can see that the django app and database is running at this point.
-```shell
-C:\Users\AliBigdeli\Documents\GitHub\Django-Kubernetes-Template>kubectl get all
-NAME                           READY   STATUS    RESTARTS   AGE
-pod/django-5b74bd444-jfxq9     1/1     Running   0          22s
-pod/postgres-6bdb7d69c-sdp4j   1/1     Running   0          5m35s
-
-NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
-service/django       ClusterIP   10.103.127.206   <none>        8000/TCP   17s
-service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP    18h
-service/postgres     ClusterIP   10.108.239.104   <none>        5432/TCP   5m26s
-
-NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/django     1/1     1            1           22s
-deployment.apps/postgres   1/1     1            1           5m35s
-
-NAME                                 DESIRED   CURRENT   READY   AGE
-replicaset.apps/django-5b74bd444     1         1         1       22s
-replicaset.apps/postgres-6bdb7d69c   1         1         1       5m35s
-
-```
 you can change the default configs and update each one.
 
 migrate database configs.
@@ -268,30 +257,86 @@ kubectl apply -f ./k8s/nginx/service.yml
 at the end you will end up having the all the needed services to run the whole application.
 
 ```shell
-C:\Users\AliBigdeli\Documents\GitHub\Django-Kubernetes-Template>kubectl get all                            
-NAME                           READY   STATUS    RESTARTS      AGE
-pod/django-5b74bd444-jfxq9     1/1     Running   0             6m47s
-pod/my-nginx-c7bb68546-9gfzp   1/1     Running   3 (35s ago)   67s
-pod/my-nginx-c7bb68546-fbpgt   1/1     Running   3 (33s ago)   67s
-pod/postgres-6bdb7d69c-sdp4j   1/1     Running   0             12m
+C:\Users\AliBigdeli\Documents\GitHub\Django-Kubernetes-Template>kubectl get all
+NAME                           READY   STATUS    RESTARTS   AGE
+pod/django-5b74bd444-mskdm     1/1     Running   0          2m43s
+pod/my-nginx-c7bb68546-64q56   1/1     Running   0          25s
+pod/my-nginx-c7bb68546-qrkl2   1/1     Running   0          25s
+pod/postgres-6bdb7d69c-2wn9v   1/1     Running   0          7m3s
+pod/redis-67b95b7577-2jwv8     1/1     Running   0          4m1s
 
 NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
-service/django               ClusterIP      10.103.127.206   <none>        8000/TCP       6m42s
-service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP        18h
-service/nginx-loadbalancer   LoadBalancer   10.109.255.31    localhost     80:31245/TCP   63s
-service/postgres             ClusterIP      10.108.239.104   <none>        5432/TCP       11m
+service/django               ClusterIP      10.110.233.36    <none>        8000/TCP       2m21s
+service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP        4d21h
+service/nginx-loadbalancer   LoadBalancer   10.109.224.172   localhost     80:30362/TCP   20s
+service/postgres             ClusterIP      10.97.134.246    <none>        5432/TCP       6m58s
+service/redis                ClusterIP      10.98.178.118    <none>        6379/TCP       3m46s
 
 NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/django     1/1     1            1           6m47s
-deployment.apps/my-nginx   2/2     2            2           67s
+deployment.apps/django     1/1     1            1           2m43s
+deployment.apps/my-nginx   2/2     2            2           25s
+deployment.apps/postgres   1/1     1            1           7m3s
+deployment.apps/redis      1/1     1            1           4m1s
 
 NAME                                 DESIRED   CURRENT   READY   AGE
-replicaset.apps/django-5b74bd444     1         1         1       6m47s
-replicaset.apps/my-nginx-c7bb68546   2         2         2       67s
-replicaset.apps/postgres-6bdb7d69c   1         1         1       12m
+replicaset.apps/django-5b74bd444     1         1         1       2m43s
+replicaset.apps/my-nginx-c7bb68546   2         2         2       25s
+replicaset.apps/postgres-6bdb7d69c   1         1         1       7m3s
+replicaset.apps/redis-67b95b7577     1         1         1       4m1s
 ```
 at the end you need to be able to see the website by opening your localhost on port 80
 
 
 
 
+
+### deploy worker
+in order to control celery worker we need to deploy the worker also based on the django config, so with the following command you can deploy the worker.
+```shell
+kubectl apply -f ./k8s/celery-worker/deployment.yml
+```
+**Note:** there is no need for other configurations except changing the resources based on your need.
+
+
+### deploy beater
+for your schedule tasks you need to have a beater running to follow the time and do tasks based on schedules, in order to run it you can use the following command:
+```shell
+kubectl apply -f ./k8s/celery-beater/deployment.yml
+```
+**Note:** there is no need for other configurations except changing the resources based on your need.
+
+and at the end you need should have all the pods running like the list below:
+```shell
+C:\Users\AliBigdeli\Documents\GitHub\Django-Kubernetes-Template>kubectl get all
+NAME                                 READY   STATUS    RESTARTS   AGE
+pod/celery-beater-c85b98476-7mr8r    1/1     Running   0          74m
+pod/celery-worker-76455b99fb-knhtn   1/1     Running   0          81m
+pod/django-5b74bd444-r6nhl           1/1     Running   0          82m
+pod/my-nginx-c7bb68546-m7c8t         1/1     Running   0          81m
+pod/my-nginx-c7bb68546-vtcdl         1/1     Running   0          81m
+pod/postgres-6bdb7d69c-2wn9v         1/1     Running   0          107m
+pod/redis-67b95b7577-2jwv8           1/1     Running   0          104m
+
+NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/django               ClusterIP      10.110.233.36    <none>        8000/TCP       103m
+service/kubernetes           ClusterIP      10.96.0.1        <none>        443/TCP        4d22h
+service/nginx-loadbalancer   LoadBalancer   10.109.224.172   localhost     80:30362/TCP   101m
+service/postgres             ClusterIP      10.97.134.246    <none>        5432/TCP       107m
+service/redis                ClusterIP      10.98.178.118    <none>        6379/TCP       104m
+
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/celery-beater   1/1     1            1           80m
+deployment.apps/celery-worker   1/1     1            1           81m
+deployment.apps/django          1/1     1            1           82m
+deployment.apps/my-nginx        2/2     2            2           81m
+deployment.apps/postgres        1/1     1            1           107m
+deployment.apps/redis           1/1     1            1           104m
+
+NAME                                       DESIRED   CURRENT   READY   AGE
+replicaset.apps/celery-beater-c85b98476    1         1         1       74m
+replicaset.apps/celery-worker-76455b99fb   1         1         1       81m
+replicaset.apps/django-5b74bd444           1         1         1       82m
+replicaset.apps/my-nginx-c7bb68546         2         2         2       81m
+replicaset.apps/postgres-6bdb7d69c         1         1         1       107m
+replicaset.apps/redis-67b95b7577           1         1         1       104m
+```
