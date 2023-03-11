@@ -1,39 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django
-  namespace: default
+  name: celery-beater
   labels:
-    app: django
+    app: celery-beater
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: django
+      name: celery-beater
   template:
     metadata:
       labels:
-        name: django
+        name: celery-beater
         tier: backend
     spec:
       containers:
-        - name: django
+        - name: celery-beater
           image: django_app:latest
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh"]
-          args: ["-c", "python3 manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 core.wsgi:application"]
-          ports:
-            - containerPort: 8000
+          args: ["-c", "celery -A core beat -l info"]
           envFrom:
             - configMapRef:
                 name: django-config
           resources:
             limits:
-              memory: 512Mi
-              cpu: "250m"
+              memory: 100Mi
+              cpu: "100m"
             requests:
-              memory: 512Mi
-              cpu: "250m"
+              memory: 100Mi
+              cpu: "100m"
 
           volumeMounts:
             - name: media-volume-mount

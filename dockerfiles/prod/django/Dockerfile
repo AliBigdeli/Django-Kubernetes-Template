@@ -31,10 +31,6 @@ COPY ./core .
 # adding access to port 8000
 EXPOSE 8000
 
-# collecting static files and run the project
-RUN python manage.py collectstatic --no-input && \
-    python manage.py migrate && \
-    gunicorn --bind 0.0.0.0:8000 core.wsgi:application
 
 
 

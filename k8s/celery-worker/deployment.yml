@@ -1,29 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django
-  namespace: default
+  name: celery-worker
   labels:
-    app: django
+    app: celery-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: django
+      name: celery-worker
   template:
     metadata:
       labels:
-        name: django
+        name: celery-worker
         tier: backend
     spec:
       containers:
-        - name: django
+        - name: celery-worker
           image: django_app:latest
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh"]
-          args: ["-c", "python3 manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 core.wsgi:application"]
-          ports:
-            - containerPort: 8000
+          args: ["-c", "celery -A core worker --loglevel=info"]
           envFrom:
             - configMapRef:
                 name: django-config
