@@ -141,6 +141,7 @@ kubernetes cheat sheets.
 
 <div align="center" ><img loading="lazy"  src="./docs/kubernetes-cheatsheet.jpg"></div>
 # Deployment
+
 ## Build docker image
 for deployment purposes you need to build the docker image, so it can be used inside the k8s deployment as a refrence.
 there are two options here: 
