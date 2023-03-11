@@ -69,25 +69,6 @@ services:
       - backend
       - celery_worker
 
-  celery_flower:
-    build: 
-      context: .
-      dockerfile: dockerfiles/dev/django/Dockerfile
-    command: celery -A core flower --loglevel=DEBUG --port=9090 --basic_auth=admin:admin
-    container_name: celery_flower
-    volumes:
-      - ./core:/usr/src/app
-    env_file:
-      - envs/dev/django/.env
-    environment:
-        - FILE_DEBUGGER=False
-    ports:
-      - 9090:9090
-    depends_on:
-      - redis
-      - backend
-      - celery_worker
-
   smtp4dev:
     image: rnwood/smtp4dev:v3
     restart: always
