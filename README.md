@@ -33,9 +33,11 @@
     - [deploy nginx](#deploy-nginx)
     - [deploy worker](#deploy-worker)
     - [deploy beater](#deploy-beater)
+- [License](#license)
+- [Bugs](#bugs)
 
 # Goal
-This template id dedicated to up and running django with kubernetes.
+This template is dedicated to up and running django with kubernetes.
 
 # Diagram 
 this is a simple diagram to show you how the services are integrating with each other.
@@ -340,3 +342,10 @@ replicaset.apps/my-nginx-c7bb68546         2         2         2       81m
 replicaset.apps/postgres-6bdb7d69c         1         1         1       107m
 replicaset.apps/redis-67b95b7577           1         1         1       104m
 ```
+
+# License
+MIT.
+
+
+# Bugs
+Feel free to let me know if something needs to be fixed. or even any features seems to be needed in this repo.
